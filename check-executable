@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# check if a filename was provided
+if [[ -z "$1" ]]; then
+    echo "Usage: $0 <filename>"
+    exit 1
+fi
+
+FILE="$1"
+
+# Check if the file exists
+if [[ ! -f "$FILE" ]]; then
+    echo "Error: File does not exist."
+    exit 1
+fi
+
+# Check if the file is executable
+if [[ -x "$FILE" ]]; then
+    echo "$FILE is already executable."
+else
+    echo "$FILE is not executable."
+
+    read -rp "Would you like to make it executable? (y/n): " ANSWER
+
+    if [[ "$ANSWER" =~ ^[Yy]$ ]]; then
+        chmod +x "$FILE"
+        echo "Execute permissions added."
+    else
+        echo "No changes made."
+        exit 0
+    fi
+fi
+
+# Run ShellCheck
+echo "Running ShellCheck..."
+shellcheck "$FILE"
+
